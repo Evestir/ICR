@@ -554,5 +554,22 @@ namespace awsedfrgt3e4
                 IsOpen = false;
             }
         }
+
+        private void Continue_Click(object sender, RoutedEventArgs e)
+        {
+            saveModifiedBitmap();
+
+            if (CurrentNumb + 1 <= ImageList.Count)
+            {
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(2);
+                });
+
+                thread.Start();
+
+                InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
+            }
+        }
     }
 }
