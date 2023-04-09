@@ -10,16 +10,16 @@
     <Grid>
         <StackPanel>
             <materialDesign:Card Name="DragPanel" Padding="9 8 0 8" Margin="1 1 1 1" MouseDown="DragPanel_MouseDown" Background="#1f1f1f" Foreground="#FFFFFF">
-                <TextBlock>CDI v0.1</TextBlock>
+                <TextBlock>CDI v0.2.4</TextBlock>
             </materialDesign:Card>
         </StackPanel>
         <StackPanel>
             <Button Name="CloseBtn" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="563 0 2 0" Click="CloseBtn_Click" Background="#201c1c" BorderBrush="#201c1c"/>
         </StackPanel>
-        <Button Name="Next" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="350 -720 100 22" Background="#1f1f1f" BorderThickness="0" Click="Next_Click">
+        <Button Name="Next" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="350 112 100 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Next_Click">
             <materialDesign:PackIcon Kind="ChevronRight" Width="35" Height="28"/>
         </Button>
-        <Button Name="Prev" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="100 -720 350 22" Background="#1f1f1f" BorderThickness="0" Click="Prev_Click">
+        <Button Name="Prev" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="100 112 350 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Prev_Click">
             <materialDesign:PackIcon Kind="ChevronLeft" Width="35" Height="28"/>
         </Button>
         <StackPanel>
@@ -46,7 +46,8 @@
                         <DropShadowEffect
                         BlurRadius="40"
                         Direction="90"
-                        Color="IndianRed"/>
+                        Opacity="0.6"
+                        Color="#7160e8"/>
                     </Image.Effect>
                 </Image>
                 <Canvas Height="1200">
@@ -61,5 +62,17 @@
                 </Canvas>
             </Grid>
         </StackPanel>
+        <StackPanel>
+            <TextBlock Name="InfoText"  Background="#1f1f1f" Padding="30 6 0 9" Text="Waiting for user to input a folder.." Foreground="#a8a8a8" Margin="1 967 1 1">
+                <TextBlock.Effect>
+                    <DropShadowEffect
+                    Direction="90"
+                    Color="Black"
+                    Opacity="0.5"
+                    BlurRadius="20"/>
+                </TextBlock.Effect>
+            </TextBlock>
+        </StackPanel>
+        <Image Height="100" Width="100" Margin="-34,932,532,-34" Source="{StaticResource Help}" Stretch="None" Opacity="0.6"/>
     </Grid>
 </Window>

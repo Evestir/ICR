@@ -24,6 +24,7 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Media.Media3D;
 using System.Reflection;
 using awsedfrgt3e4.src;
+using System.Linq.Expressions;
 
 namespace awsedfrgt3e4
 {
@@ -59,6 +60,7 @@ namespace awsedfrgt3e4
         BitmapImage resizedImage;
         BitmapImage realorigin;
         bool isMouseDown = false;
+        string CurrentShowingImageName;
         public bool isExistRect = false;
         public System.Drawing.Point pointStart;
         public System.Drawing.Point pointEnd;
@@ -72,6 +74,7 @@ namespace awsedfrgt3e4
             if (ImageList != null)
             {
                 realorigin = new BitmapImage(new Uri(ImageList[y]));
+                CurrentShowingImageName = ImageList[y].ToString();
                 resizedImage = ResizeImage(598, realorigin);
                 CurrentShowingImage.Source = new BitmapImage(new Uri(ImageList[y]));
                 CurrentNumb++;
@@ -156,17 +159,19 @@ namespace awsedfrgt3e4
                     if (System.IO.Path.GetExtension(file) == ".png" | System.IO.Path.GetExtension(file) == ".jpg")
                     {
                         ImageList.Add(file); // Add the file to the list
-                        AllocConsole();
+                        //AllocConsole();
                         //Console.WriteLine(file);
                     }
                 }
             }
             else {
                 MessageBox.Show("The Intended path was not found!");
+                return;
             }
 
             if (ImageList.Count > 0) {
                 ShowImage(CurrentNumb);
+                InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
             else
             {
@@ -179,6 +184,7 @@ namespace awsedfrgt3e4
             if (CurrentNumb + 1 <= ImageList.Count)
             {
                 ShowImage(CurrentNumb);
+                InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
             else
             {
@@ -192,6 +198,7 @@ namespace awsedfrgt3e4
             {
                 CurrentNumb -= 2;
                 ShowImage(CurrentNumb);
+                InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
             else
             {
@@ -278,16 +285,26 @@ namespace awsedfrgt3e4
 
                 var PPath = System.IO.Directory.GetParent(PathLocation);
 
-                Console.WriteLine("parent path: " + PPath);
+                //Console.WriteLine("parent path: " + PPath);
 
                 if (!Directory.Exists(PPath.ToString() + "\\CroppedImages"))
                 {
                     Directory.CreateDirectory(PPath.ToString() + "\\CroppedImages");
                 }
 
-                cropBitmap.Save(PPath + "\\CroppedImages\\"+ System.IO.Path.GetFileNameWithoutExtension(PathLocation) + ".png", ImageFormat.Png);
-                cropBitmap.Dispose();
-                cropBitmap = null;
+                try {
+                    cropBitmap.Save(PPath + "\\CroppedImages\\" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + ".png", ImageFormat.Png);
+                    cropBitmap.Dispose();
+                    cropBitmap = null;
+                }
+                catch (Exception e){
+                    InfoText.Text = e.Message;
+
+                    return;
+                }
+                
+
+                InfoText.Text = "Successfully Saved '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
         }
 
