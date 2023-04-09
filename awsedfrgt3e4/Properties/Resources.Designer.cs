@@ -68,5 +68,14 @@ namespace awsedfrgt3e4.Properties {
                 return ResourceManager.GetStream("MacosScreenShot", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.IO.UnmanagedMemoryStream similar to System.IO.MemoryStream.
+        /// </summary>
+        public static System.IO.UnmanagedMemoryStream Next {
+            get {
+                return ResourceManager.GetStream("Next", resourceCulture);
+            }
+        }
     }
 }

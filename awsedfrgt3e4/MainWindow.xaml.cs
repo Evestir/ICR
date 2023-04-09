@@ -568,6 +568,9 @@ namespace awsedfrgt3e4
 
                 thread.Start();
 
+                MediaControl mEdia = new MediaControl();
+                mEdia.PlayNext();
+
                 InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
         }

@@ -30,7 +30,7 @@
             BorderBrush="#1f1f1f"/>
         <StackPanel>
             <materialDesign:Card Name="DragPanel" Padding="9 8 0 8" Margin="1 1 1 1" MouseDown="DragPanel_MouseDown" Background="#1f1f1f" Foreground="#FFFFFF">
-                <TextBlock>ICR v0.2.7</TextBlock>
+                <TextBlock>ICR v0.2.8</TextBlock>
             </materialDesign:Card>
         </StackPanel>
         <StackPanel>

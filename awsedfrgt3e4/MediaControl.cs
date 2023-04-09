@@ -29,5 +29,18 @@ namespace awsedfrgt3e4.src
                 MessageBox.Show(ex.Message);
             }
         }
+        public void PlayNext()
+        {
+            try
+            {
+                System.IO.Stream str = Properties.Resources.Next;
+                SoundPlayer player = new SoundPlayer(str);
+                player.Play();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }
