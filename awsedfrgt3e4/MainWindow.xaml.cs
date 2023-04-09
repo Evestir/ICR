@@ -25,6 +25,7 @@ using System.Windows.Media.Media3D;
 using System.Reflection;
 using awsedfrgt3e4.src;
 using System.Linq.Expressions;
+using MaterialDesignThemes.Wpf;
 
 namespace awsedfrgt3e4
 {
@@ -68,6 +69,7 @@ namespace awsedfrgt3e4
         public System.Drawing.Point ipointEnd;
         Bitmap newBitmap = null;
         System.Drawing.Image newSysImg = null;
+        bool IsOpen = false;
 
         public bool ShowImage(int y)
         {
@@ -145,6 +147,86 @@ namespace awsedfrgt3e4
             }
         }
 
+        float Blend(float time, float startValue, float change, float duration)
+        {
+            time /= duration / 2;
+            if (time < 1)
+            {
+                return change / 2 * time * time + startValue;
+            }
+
+            time--;
+            return -change / 2 * (time * (time - 2) - 1) + startValue;
+        }
+
+        public void Update(int ver)
+        {
+            double x = 0;
+
+            if (ver == 0)
+            {
+                while (x < 1)
+                {
+                    x = x + 0.01;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.Height = 180 + Blend((float)x, 0, 820, 1f);
+                        CurrentShowingImage.Opacity = x;
+                        RectangularIm.Opacity = x;
+                    });
+                    Thread.Yield();
+                }
+            }
+            else if (ver == 1)
+            {
+                while (x < 1)
+                {
+                    x = x + 0.01;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        this.Height = 1000 - Blend((float)x, 0, 820, 1f);
+                        CurrentShowingImage.Opacity = 1 - x;
+                        RectangularIm.Opacity = 1 - x;
+                    });
+                    Thread.Yield();
+                }
+            }
+            else if (ver == 2)
+            {
+                while (x < 1)
+                {
+                    x = x + 0.02;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        CurrentShowingImage.Opacity = 1 - x;
+                        RectangularIm.Opacity = 1 - x;
+                    });
+                    Thread.Sleep(1);
+                }
+
+
+                this.Dispatcher.Invoke(() =>
+                {
+                    ShowImage(CurrentNumb);
+                });
+
+                x = 0;
+
+                Thread.Sleep(100);
+
+                while (x < 1)
+                {
+                    x = x + 0.01;
+                    this.Dispatcher.Invoke(() =>
+                    {
+                        CurrentShowingImage.Opacity = x;
+                        RectangularIm.Opacity = x;
+                    });
+                    Thread.Sleep(1);
+                }
+            }
+        }
+
         private void Find_Click(object sender, RoutedEventArgs e)
         {
             string PathLocation = PathLoc.Text;
@@ -170,12 +252,34 @@ namespace awsedfrgt3e4
             }
 
             if (ImageList.Count > 0) {
-                ShowImage(CurrentNumb);
+                if (IsOpen == false) ShowImage(CurrentNumb);
                 InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
             else
             {
                 MessageBox.Show("Nothing was in the folder!");
+            }
+
+            if (this.Height == 180)
+            {
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(0);
+                });
+
+                thread.Start();
+
+                IsOpen = true;
+            }
+            else
+            {
+                CurrentNumb = 0;
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(2);
+                });
+
+                thread.Start();
             }
         }
 
@@ -183,7 +287,13 @@ namespace awsedfrgt3e4
         {
             if (CurrentNumb + 1 <= ImageList.Count)
             {
-                ShowImage(CurrentNumb);
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(2);
+                });
+
+                thread.Start();
+
                 InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
             else
@@ -197,7 +307,13 @@ namespace awsedfrgt3e4
             if (CurrentNumb - 2 >= 0)
             {
                 CurrentNumb -= 2;
-                ShowImage(CurrentNumb);
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(2);
+                });
+
+                thread.Start();
+
                 InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
             else
@@ -271,7 +387,6 @@ namespace awsedfrgt3e4
             }
             return cropImage;
         }
-
         private void saveModifiedBitmap()
         {
             if (realorigin != null)
@@ -411,6 +526,32 @@ namespace awsedfrgt3e4
                 isMouseDown = false;
 
                 saveModifiedBitmap();
+            }
+        }
+
+        private void ToggleOpen_Click(object sender, RoutedEventArgs e)
+        {
+            if (IsOpen == false && this.Height == 180)
+            {
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(0);
+                });
+
+                thread.Start();
+
+                IsOpen = true;
+            }
+            else if(IsOpen == true)
+            {
+                Thread thread = new Thread(delegate ()
+                {
+                    Update(1);
+                });
+
+                thread.Start();
+
+                IsOpen = false;
             }
         }
     }

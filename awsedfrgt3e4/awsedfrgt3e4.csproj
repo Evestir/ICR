@@ -5,6 +5,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\LOGO.ico</ApplicationIcon>
+    <SelfContained>true</SelfContained>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -13,6 +15,10 @@
 
   <ItemGroup>
     <None Remove="Resources\info.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\LOGO.ico" />
   </ItemGroup>
 
   <ItemGroup>
