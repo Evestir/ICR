@@ -27,6 +27,7 @@ using awsedfrgt3e4.src;
 using System.Linq.Expressions;
 using MaterialDesignThemes.Wpf;
 using System.Windows.Interop;
+using System.Diagnostics;
 
 namespace awsedfrgt3e4
 {
@@ -79,7 +80,7 @@ namespace awsedfrgt3e4
             IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
             UseImmersiveDarkMode(hWnd, true);
             this.SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
-            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
+            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.HighQuality);
         }
 
         FileInfo[] Images;
@@ -97,6 +98,7 @@ namespace awsedfrgt3e4
         Bitmap newBitmap = null;
         System.Drawing.Image newSysImg = null;
         bool IsOpen = false;
+        uint Versionf = 0;
 
         public bool ShowImage(int y)
         {
@@ -117,17 +119,60 @@ namespace awsedfrgt3e4
 
         public void startRect(int x, int y)
         {
-            isExistRect = true;
-            pointStart.X = x;
-            pointStart.Y = y -134;
-            pointEnd.X = x;
-            pointEnd.Y = y -134;
+            switch (Versionf) {
+                case 0:
+                    isExistRect = true;
+                    pointStart.X = x;
+                    pointStart.Y = y - 140;
+                    pointEnd.X = x;
+                    pointEnd.Y = y - 140;
+                    //Console.WriteLine($"Startx: {pointStart.X} Starty: {pointStart.Y} Endx: {pointEnd.X} Endy: {pointEnd.Y}");
+                    break;
+                case 1:
+                    isExistRect = true;
+                    pointStart.X = x;
+                    pointStart.Y = y - 140;
+                    pointEnd.X = x;
+                    pointEnd.Y = y - 140;
+                    //Console.Write($"Startx: {pointStart.X} Starty: {pointStart.Y}");
+                    break;
+                case 2:
+                    isExistRect = true;
+                    pointStart.X = x;
+                    pointStart.Y = y - 140;
+                    pointEnd.X = x;
+                    pointEnd.Y = y - 140;
+                    //Console.WriteLine($"Startx: {pointStart.X} Starty: {pointStart.Y} Endx: {pointEnd.X} Endy: {pointEnd.Y}");
+                    break;
+            }
         }
 
         public void endRect(int x, int y)
         {
-            pointEnd.X = x;
-            pointEnd.Y = y -134;
+            switch (Versionf) {
+                case 0:
+                    pointEnd.X = x;
+                    pointEnd.Y = y - 140;
+                    //Console.Write($"Endx: {pointEnd.X} Endy: {pointEnd.Y} \n");
+                    break;
+                case 1:
+                    pointEnd.X = x;
+                    if (pointStart.X - pointEnd.X >= 0)
+                    {
+                        pointEnd.Y = pointStart.Y + pointStart.X - pointEnd.X;
+                    }
+                    else
+                    {
+                        pointEnd.Y = pointStart.Y + pointEnd.X - pointStart.X;
+                    }
+                    //Console.Write($"Endx: {pointEnd.X} Endy: {pointEnd.Y} \n");
+                    break;
+                case 2:
+                    pointEnd.X = x;
+                    pointEnd.Y = y - 140;
+                    //Console.Write($"Endx: {pointEnd.X} Endy: {pointEnd.Y} \n");
+                    break;
+            }
         }
 
         public System.Drawing.Rectangle getRect(int ver)
@@ -151,7 +196,7 @@ namespace awsedfrgt3e4
             }
             else if (ver == 2)
             {
-                double golden_ratio = realorigin.PixelWidth / 598f;
+                double golden_ratio = realorigin.PixelWidth / (double)585;
 
                 int x = pointStart.X > pointEnd.X ? (int)Math.Round(pointEnd.X * golden_ratio) : (int)Math.Round(pointStart.X * golden_ratio);
                 int y = pointStart.Y > pointEnd.Y ? (int)Math.Round(pointEnd.Y * golden_ratio) : (int)Math.Round(pointStart.Y * golden_ratio);
@@ -167,6 +212,20 @@ namespace awsedfrgt3e4
                 if (h <= 1) h = 1;
 
                 return new System.Drawing.Rectangle(x, y, w, h);
+            }
+            else if (ver == 3)
+            {
+                double golden_ratio = realorigin.PixelWidth / (double)585;
+
+                var rectanglaa = (UIElement)FindName("RectangularIm");
+                var rectangla = (System.Windows.Shapes.Rectangle)FindName("RectangularIm");
+                int x = (int)Math.Round(Canvas.GetTop(rectangla) * golden_ratio);
+                int y = (int)Math.Round(Canvas.GetLeft(rectangla) * golden_ratio);
+                int widthheight = (int)Math.Round(512 * golden_ratio);
+
+                //Console.WriteLine($"{x} {y}");
+
+                return new System.Drawing.Rectangle(y, x, widthheight, widthheight);
             }
             else
             {
@@ -403,6 +462,7 @@ namespace awsedfrgt3e4
 
             return TransformedBitmapToBitmapImage(resizedImage);
         }
+
         public Bitmap cropAtRect(Bitmap orgImg, System.Drawing.Rectangle sRect)
         {
             System.Drawing.Rectangle destRect = new System.Drawing.Rectangle(System.Drawing.Point.Empty, sRect.Size);
@@ -414,17 +474,28 @@ namespace awsedfrgt3e4
             }
             return cropImage;
         }
+
         private void saveModifiedBitmap()
         {
             if (realorigin != null)
             {
-                if (getRect(1).Width < 5)
+                Bitmap cropBitmap;
+                if (Versionf == 2)
                 {
-                    return;
-                }
-                Bitmap cropBitmap = cropAtRect(BitmapImageToBitmap(realorigin), getRect(2));
-                string PathLocation = PathLoc.Text;
+                    var rectanglaa = (UIElement)FindName("RectangularIm");
+                    var rectangla = (System.Windows.Shapes.Rectangle)FindName("RectangularIm");
+                    cropBitmap = cropAtRect(BitmapImageToBitmap(realorigin), getRect(3));
 
+                }
+                else
+                {
+                    if (getRect(1).Width < 5)
+                    {
+                        return;
+                    }
+                    cropBitmap = cropAtRect(BitmapImageToBitmap(realorigin), getRect(2));
+                }
+                string PathLocation = PathLoc.Text;
                 var PPath = System.IO.Directory.GetParent(PathLocation);
 
                 //Console.WriteLine("parent path: " + PPath);
@@ -434,17 +505,19 @@ namespace awsedfrgt3e4
                     Directory.CreateDirectory(PPath.ToString() + "\\CroppedImages");
                 }
 
-                try {
+                try
+                {
                     cropBitmap.Save(PPath + "\\CroppedImages\\" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + ".png", ImageFormat.Png);
                     cropBitmap.Dispose();
                     cropBitmap = null;
                 }
-                catch (Exception e){
+                catch (Exception e)
+                {
                     InfoText.Text = e.Message;
 
                     return;
                 }
-                
+
 
                 InfoText.Text = "Successfully Saved '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
@@ -490,6 +563,7 @@ namespace awsedfrgt3e4
                 return bitmapImage;
             }
         }
+
         private void CurrentShowingImage_MouseMove(object sender, MouseEventArgs e)
         {
             if (!isMouseDown)
@@ -497,8 +571,7 @@ namespace awsedfrgt3e4
                 return;
             }
             System.Windows.Point mousePos = e.GetPosition(this);
-            Bitmap a = new Bitmap(resizedImage.PixelWidth, resizedImage.PixelHeight, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-            if (isExistRect)
+            if (isExistRect && Versionf != 2)
             {
                 var rectanglaa = (UIElement)FindName("RectangularIm");
                 var rectangla = (System.Windows.Shapes.Rectangle)FindName("RectangularIm");
@@ -507,8 +580,25 @@ namespace awsedfrgt3e4
                 Canvas.SetTop(rectanglaa, getRect(1).Top);
                 rectangla.Width = getRect(1).Width;
                 rectangla.Height = getRect(1).Height;
+            }
+            else if (isExistRect && Versionf == 2)
+            {
+                var rectanglaa = (UIElement)FindName("RectangularIm");
+                var rectangla = (System.Windows.Shapes.Rectangle)FindName("RectangularIm");
 
-                
+                int x = pointEnd.X;
+                int y = pointEnd.Y;
+
+                if (x - 256 >= 0 && x + 256 <= 584) x -= 256;
+                else if (x + 256 > 584) x = 72;
+                else if (x - 256 < 0) x = 0;
+                if (y - 256 >= 0 && y + 256 <= 788) y -= 256;
+                else if (y + 256 > 788) y = 276;
+                else if (y - 256 < 0) y = 0;
+                Canvas.SetLeft(rectanglaa, x);
+                Canvas.SetTop(rectanglaa, y);
+                rectangla.Width = 512;
+                rectangla.Height = 512;
             }
 
             endRect((int)mousePos.X, (int)mousePos.Y);
@@ -520,7 +610,6 @@ namespace awsedfrgt3e4
 
             isMouseDown = true;
             System.Windows.Point mousePos = e.GetPosition(this);
-
             startRect((int)mousePos.X, (int)mousePos.Y);
         }
 
@@ -600,6 +689,30 @@ namespace awsedfrgt3e4
 
                 InfoText.Text = "You're watching '" + System.IO.Path.GetFileNameWithoutExtension(CurrentShowingImageName) + "'";
             }
+        }
+
+        private void ToolBarAbout_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new ProcessStartInfo
+            {
+                FileName = "https://github.com/Evestir/ICR",
+                UseShellExecute = true
+            });
+        }
+
+        private void ToolBarSquareRatio_Click(object sender, RoutedEventArgs e)
+        {
+            Versionf = 1;
+        }
+
+        private void ToolBarDragCut_Click(object sender, RoutedEventArgs e)
+        {
+            Versionf = 0;
+        }
+
+        private void ToolBarFiveOneTwo_Click(object sender, RoutedEventArgs e)
+        {
+            Versionf = 2;
         }
     }
 }

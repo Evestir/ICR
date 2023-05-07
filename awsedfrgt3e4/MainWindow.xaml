@@ -4,15 +4,31 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:awsedfrgt3e4"
         mc:Ignorable="d"
-        Title="MainWindow" Height="180" Width="600" BorderThickness="0" ResizeMode="CanMinimize" Background="#202020">
+        Title="CutDaImage" Height="180" Width="600" BorderThickness="0" ResizeMode="CanMinimize" Background="#202020">
     <Grid>
-        <Button Name="ToggleOpen" 
+        <Grid>
+            <materialDesign:Card Height="24" VerticalAlignment="Top" Background="#202020">
+                <Menu materialDesign:MenuAssist.TopLevelMenuItemHeight="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type materialDesign:Card}}, Path=ActualHeight}">
+                    <MenuItem Header="Tasks">
+                        <MenuItem Header="Quit" />
+                    </MenuItem>
+                    <MenuItem Header="Options">
+                        <MenuItem Name="ToolBarFiveOneTwo" Click="ToolBarFiveOneTwo_Click" Header="512x512 Cut" />
+                        <MenuItem Name="ToolBarSquareRatio" Click="ToolBarSquareRatio_Click" Header="Square Ratio Cut" />
+                        <MenuItem Name="ToolBarDragCut" Click="ToolBarDragCut_Click" Header="Drag To Cut" />
+                    </MenuItem>
+                    <MenuItem Header="About" Name="ToolBarAbout" Click="ToolBarAbout_Click"/>
+                </Menu>
+            </materialDesign:Card>
+        </Grid>
+        <Button Name="ToggleOpen"
             Content="{materialDesign:PackIcon DotsHorizontal}"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-            Margin="0,82,30,0" 
+            Margin="0,92,30,0" 
             HorizontalAlignment="Right"
             Click="ToggleOpen_Click" 
             VerticalAlignment="Top" 
@@ -20,20 +36,20 @@
             BorderBrush="#1f1f1f"/>
         <Button Name="Continue" Content="{materialDesign:PackIcon check}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-            Margin="30,82,0,0"
+            Margin="30,92,0,0"
             HorizontalAlignment="Left"
             Click="Continue_Click" 
             VerticalAlignment="Top" 
             Background="#1f1f1f" 
             BorderBrush="#1f1f1f"/>
-        <Button Name="Next" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="350 82 100 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Next_Click">
+        <Button Name="Next" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="350 92 100 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Next_Click">
             <materialDesign:PackIcon Kind="ChevronRight" Width="35" Height="28"/>
         </Button>
-        <Button Name="Prev" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="100 82 350 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Prev_Click">
+        <Button Name="Prev" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="100 92 350 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Prev_Click">
             <materialDesign:PackIcon Kind="ChevronLeft" Width="35" Height="28"/>
         </Button>
         <StackPanel>
-            <materialDesign:Card Padding="10 0 10 10" Margin="32 20 32 0" Background="#313131" Foreground="#FFFFFF">
+            <materialDesign:Card Padding="10 0 10 10" Margin="32 30 32 0" Background="#313131" Foreground="#FFFFFF">
                 <TextBox 
                     Name="PathLoc"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -51,7 +67,7 @@
                 </Button.Effect>
             </Button>
             <Grid>
-                <Image Name="CurrentShowingImage" Width ="598" Height="1200" VerticalAlignment="Top" MouseMove="CurrentShowingImage_MouseMove" MouseDown="CurrentShowingImage_MouseDown" MouseUp="CurrentShowingImage_MouseUp" MouseLeave="CurrentShowingImage_MouseLeave" Cursor="Cross">
+                <Image Name="CurrentShowingImage" MaxWidth ="600" Height="1200" VerticalAlignment="Top" HorizontalAlignment="Left" MouseMove="CurrentShowingImage_MouseMove" MouseDown="CurrentShowingImage_MouseDown" MouseUp="CurrentShowingImage_MouseUp" MouseLeave="CurrentShowingImage_MouseLeave" Cursor="Cross">
                     <Image.Effect>
                         <DropShadowEffect
                         BlurRadius="40"
@@ -60,12 +76,14 @@
                         Color="#7160e8"/>
                     </Image.Effect>
                 </Image>
-                <Canvas Height="1200" Width="598" VerticalAlignment="Top">
-                    <Rectangle Name="RectangularIm" Stroke="Aqua" Width="0" Height="0" Canvas.Left="0" Canvas.Top="0" IsHitTestVisible="False">
+                <Canvas Height="1200" MaxWidth="600" VerticalAlignment="Top" IsHitTestVisible="False" HorizontalAlignment="Left">
+                    <Rectangle Name="RectangularIm" Stroke="Aqua" Width="0" Height="0" Canvas.Left="0" Canvas.Top="0" IsHitTestVisible="False" StrokeThickness="3">
                         <Rectangle.Effect>
                             <DropShadowEffect 
                             BlurRadius="10"
-                            Opacity="30.0"
+                            ShadowDepth="0"
+                            Direction="0"
+                            Opacity="1"
                             Color="Black"/>
                         </Rectangle.Effect>
                     </Rectangle>
@@ -83,6 +101,6 @@
                 </TextBlock.Effect>
             </TextBlock>
         </StackPanel>
-        <Image Height="100" Width="100" Margin="-20,896,532,-34" Source="{StaticResource Help}" Stretch="None" Opacity="0.6"/>
+        <Image Height="100" Width="100" Margin="-20,896,532,-34" Source="{StaticResource Help}" Stretch="None" Opacity="0.8"/>
     </Grid>
 </Window>
