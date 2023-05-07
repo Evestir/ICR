@@ -26,6 +26,7 @@ using System.Reflection;
 using awsedfrgt3e4.src;
 using System.Linq.Expressions;
 using MaterialDesignThemes.Wpf;
+using System.Windows.Interop;
 
 namespace awsedfrgt3e4
 {
@@ -40,19 +41,45 @@ namespace awsedfrgt3e4
         [DllImport("Kernel32")]
         public static extern void FreeConsole();
 
+        [DllImport("dwmapi.dll")]
+        private static extern int DwmSetWindowAttribute(IntPtr hwnd, int attr, [In] ref bool attrValue, int attrSize);
+
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1 = 19;
+        private const int DWMWA_USE_IMMERSIVE_DARK_MODE = 20;
+        private const int DWMWA_CAPTION_COLOR = 35;
+
+        private static bool UseImmersiveDarkMode(IntPtr handle, bool enabled)
+        {
+            if (IsWindows10OrGreater(17763))
+            {
+                var attribute = DWMWA_USE_IMMERSIVE_DARK_MODE_BEFORE_20H1;
+                if (IsWindows10OrGreater(18985))
+                {
+                    attribute = DWMWA_USE_IMMERSIVE_DARK_MODE;
+                }
+
+                bool value = enabled;
+
+                int useImmersiveDarkMode = enabled ? 1 : 0;
+                if (DwmSetWindowAttribute(handle, (int)attribute, ref value, Marshal.SizeOf<bool>()) == 1) return true;
+                else return false;
+            }
+
+            return false;
+        }
+
+        private static bool IsWindows10OrGreater(int build = -1)
+        {
+            return Environment.OSVersion.Version.Major >= 10 && Environment.OSVersion.Version.Build >= build;
+        }
+
         public MainWindow()
         {
             InitializeComponent();
-        }
-
-        private void DragPanel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            DragMove();
-        }
-
-        private void CloseBtn_Click(object sender, RoutedEventArgs e)
-        {
-            Environment.Exit(0);
+            IntPtr hWnd = new WindowInteropHelper(this).EnsureHandle();
+            UseImmersiveDarkMode(hWnd, true);
+            this.SetValue(TextOptions.TextFormattingModeProperty, TextFormattingMode.Ideal);
+            RenderOptions.SetBitmapScalingMode(this, BitmapScalingMode.NearestNeighbor);
         }
 
         FileInfo[] Images;
@@ -92,15 +119,15 @@ namespace awsedfrgt3e4
         {
             isExistRect = true;
             pointStart.X = x;
-            pointStart.Y = y -164;
+            pointStart.Y = y -134;
             pointEnd.X = x;
-            pointEnd.Y = y -164;
+            pointEnd.Y = y -134;
         }
 
         public void endRect(int x, int y)
         {
             pointEnd.X = x;
-            pointEnd.Y = y -164;
+            pointEnd.Y = y -134;
         }
 
         public System.Drawing.Rectangle getRect(int ver)

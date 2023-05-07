@@ -6,44 +6,34 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:awsedfrgt3e4"
         mc:Ignorable="d"
-        Title="MainWindow" Height="180" Width="600" BorderThickness="1" BorderBrush="#7160e8" ResizeMode="NoResize" WindowStyle="None" Background="#202020">
+        Title="MainWindow" Height="180" Width="600" BorderThickness="0" ResizeMode="CanMinimize" Background="#202020">
     <Grid>
         <Button Name="ToggleOpen" 
             Content="{materialDesign:PackIcon DotsHorizontal}"
             IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-            Margin="0,112,30,0" 
+            Margin="0,82,30,0" 
             HorizontalAlignment="Right"
             Click="ToggleOpen_Click" 
             VerticalAlignment="Top" 
             Background="#1f1f1f" 
             BorderBrush="#1f1f1f"/>
-        <Button Name="Continue" 
-            Content="{materialDesign:PackIcon check}"
-            IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+        <Button Name="Continue" Content="{materialDesign:PackIcon check}" IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
             Style="{StaticResource MaterialDesignRaisedDarkButton}" 
-            Margin="30,112,0,0"
+            Margin="30,82,0,0"
             HorizontalAlignment="Left"
             Click="Continue_Click" 
             VerticalAlignment="Top" 
             Background="#1f1f1f" 
             BorderBrush="#1f1f1f"/>
-        <StackPanel>
-            <materialDesign:Card Name="DragPanel" Padding="9 8 0 8" Margin="1 1 1 1" MouseDown="DragPanel_MouseDown" Background="#1f1f1f" Foreground="#FFFFFF">
-                <TextBlock>ICR v0.2.8</TextBlock>
-            </materialDesign:Card>
-        </StackPanel>
-        <StackPanel>
-            <Button Name="CloseBtn" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="563 0 2 0" Click="CloseBtn_Click" Background="#201c1c" BorderBrush="#201c1c"/>
-        </StackPanel>
-        <Button Name="Next" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="350 112 100 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Next_Click">
+        <Button Name="Next" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="350 82 100 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Next_Click">
             <materialDesign:PackIcon Kind="ChevronRight" Width="35" Height="28"/>
         </Button>
-        <Button Name="Prev" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="100 112 350 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Prev_Click">
+        <Button Name="Prev" Style="{DynamicResource MaterialDesignRaisedDarkButton}" Margin="100 82 350 0" VerticalAlignment="Top" Background="#1f1f1f" BorderThickness="0" Click="Prev_Click">
             <materialDesign:PackIcon Kind="ChevronLeft" Width="35" Height="28"/>
         </Button>
         <StackPanel>
-            <materialDesign:Card Padding="10 0 10 10" Margin="32 50 32 0" Background="#313131" Foreground="#FFFFFF">
+            <materialDesign:Card Padding="10 0 10 10" Margin="32 20 32 0" Background="#313131" Foreground="#FFFFFF">
                 <TextBox 
                     Name="PathLoc"
                     Style="{StaticResource MaterialDesignFloatingHintTextBox}"
@@ -70,7 +60,7 @@
                         Color="#7160e8"/>
                     </Image.Effect>
                 </Image>
-                <Canvas Height="1200">
+                <Canvas Height="1200" Width="598" VerticalAlignment="Top">
                     <Rectangle Name="RectangularIm" Stroke="Aqua" Width="0" Height="0" Canvas.Left="0" Canvas.Top="0" IsHitTestVisible="False">
                         <Rectangle.Effect>
                             <DropShadowEffect 
@@ -83,7 +73,7 @@
             </Grid>
         </StackPanel>
         <StackPanel>
-            <TextBlock Name="InfoText"  Background="#1f1f1f" Padding="30 6 0 9" Text="Waiting for user to input a folder.." Foreground="#a8a8a8" Margin="1 967 1 1">
+            <TextBlock Name="InfoText"  Background="#1f1f1f" Padding="30 6 0 9" Text="Waiting for user to input a folder.." Foreground="#a8a8a8" Margin="1 932 1 0">
                 <TextBlock.Effect>
                     <DropShadowEffect
                     Direction="90"
@@ -93,6 +83,6 @@
                 </TextBlock.Effect>
             </TextBlock>
         </StackPanel>
-        <Image Height="100" Width="100" Margin="-34,932,532,-34" Source="{StaticResource Help}" Stretch="None" Opacity="0.6"/>
+        <Image Height="100" Width="100" Margin="-20,896,532,-34" Source="{StaticResource Help}" Stretch="None" Opacity="0.6"/>
     </Grid>
 </Window>
